@@ -32,19 +32,32 @@ var UIController = (function(){
 
 var controller = (function(budgetCtrl, UICtrl){
 
-  var DOM = UICtrl.getDOMString();
-  
-var crtlAddItem = function(){
-  var input = UICtrl.getInput();
-  console.log(input);
-}
+  var setupEventListeners = function(){
+    var DOM = UICtrl.getDOMString();
+    
+    document.querySelector(DOM.inputBtn).addEventListener('click', crtlAddItem);
 
-document.querySelector(DOM.inputBtn).addEventListener('click', crtlAddItem);
-
-document.addEventListener('keypress', function(e){
-  if(e.keyCode === 13 || e.which === 13){
-    crtlAddItem();
+    document.addEventListener('keypress', function(e){
+      if(e.keyCode === 13 || e.which === 13){
+        crtlAddItem();
+      }
+    });
   }
-});
+  
+  
+  var crtlAddItem = function(){
+    var input = UICtrl.getInput();
+    
+  };
+
+  return {
+    init: function(){
+      console.log('App has started.');
+      setupEventListeners();
+    }
+  }
+
 
 })(BudgetController, UIController);
+
+controller.init();
