@@ -1,6 +1,55 @@
 var BudgetController = (function(){
+  var Expenses = function(id, description, value){
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  }
 
+  var Income = function(id, description, value){
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  }
 
+  var data = {
+    allitems:  {
+      exp: [],
+      inc: []
+    },
+    totals: {
+      inc: 0,
+      exp: 0
+    }
+  };
+
+  return {
+    addItem: function(type, des, val){
+      var newItem, ID;
+      //Create new ID
+      if(data.allitems[type].lenght > 0){
+        ID = data.allitems[type][data.allitems[type].length -1].id +1;
+      } else {
+        ID = 0;
+      }
+
+      //Create newItem based on 'inc' or 'exp' type
+      if(type === 'exp'){
+        newItem = new Expenses(ID, des, val);
+      } else if(type === 'inc'){
+        newItem = new Income(ID, des, val);
+      }
+
+      //Push it into our data structure
+      data.allitems[type].push(newItem);
+
+      //Return the new element
+      return newItem;
+    },
+
+    testing: function() {
+      console.log(data);
+    }
+  }
 
 })();
 
@@ -12,7 +61,7 @@ var UIController = (function(){
     inputValue: '.add__value',
     inputBtn: '.add__btn'
   }
-  
+
   return {
     getInput : function(){
       return {
@@ -34,7 +83,7 @@ var controller = (function(budgetCtrl, UICtrl){
 
   var setupEventListeners = function(){
     var DOM = UICtrl.getDOMString();
-    
+
     document.querySelector(DOM.inputBtn).addEventListener('click', crtlAddItem);
 
     document.addEventListener('keypress', function(e){
@@ -43,11 +92,13 @@ var controller = (function(budgetCtrl, UICtrl){
       }
     });
   }
-  
-  
+
+
   var crtlAddItem = function(){
-    var input = UICtrl.getInput();
-    
+    var input, newItem;
+
+    input = UICtrl.getInput();
+    newItem = budgetCtrl.addItem(input.type, input.description, input.value);
   };
 
   return {
